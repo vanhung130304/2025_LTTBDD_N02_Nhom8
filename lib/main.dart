@@ -6,6 +6,7 @@ import 'screens/thamquan_page.dart';
 import 'screens/dichuyen_page.dart';
 import 'screens/xekhach_page.dart';
 import 'screens/chuyen_bay_page.dart';
+import 'screens/luu_tru_page.dart';
 
 void main() {
   runApp(TravelApp());
@@ -80,6 +81,13 @@ class HomeScreen extends StatelessWidget {
       },
       {
         'name': 'Ninh Bình',
+        'image':
+            'https://tse3.mm.bing.net/th/id/OIP.exvYmYNk5tYHPkts9PPrZgHaEK?pid=Api&P=0&h=220',
+        'price': '850.000đ',
+        'rating': 4.4,
+      },
+      {
+        'name': 'Văn HưngNA (check clone)',
         'image':
             'https://tse3.mm.bing.net/th/id/OIP.exvYmYNk5tYHPkts9PPrZgHaEK?pid=Api&P=0&h=220',
         'price': '850.000đ',
@@ -223,7 +231,15 @@ class HomeScreen extends StatelessWidget {
                   },
                   child: buildCategoryIcon(Icons.airport_shuttle, 'Xe khách'),
                 ),
-                buildCategoryIcon(Icons.hotel, 'Lưu trú & nghỉ dưỡng'),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => const LuuTruPage()),
+                    );
+                  },
+                  child: buildCategoryIcon(Icons.hotel, 'Lưu trú & nghỉ dưỡng'),
+                ),
+
                 buildCategoryIcon(Icons.place, 'Các điểm tham quan'),
                 buildCategoryIcon(Icons.tour, 'Tour'),
               ],
