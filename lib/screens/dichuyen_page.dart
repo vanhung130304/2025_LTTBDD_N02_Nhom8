@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'chuyen_bay_page.dart';
 import 'xekhach_page.dart';
-import 'tauthuy_page.dart'; // 🔸 Thêm import TauThuyPage
+import 'tauthuy_page.dart';
+import 'tauhoa_page.dart';
 
 class DiChuyenPage extends StatefulWidget {
   @override
@@ -31,7 +32,7 @@ class _DiChuyenPageState extends State<DiChuyenPage> {
 
   final List<Map<String, dynamic>> transportOptions = [
     {'emoji': '✈️', 'label': 'Chuyến bay', 'page': ChuyenBayPage()},
-    {'emoji': '🚆', 'label': 'Tàu hỏa', 'page': null},
+    {'emoji': '🚆', 'label': 'Tàu hỏa', 'page': TauHoaPage()},
     {'emoji': '🚌', 'label': 'Xe khách', 'page': XeKhachPage()},
     {'emoji': '⛴️', 'label': 'Tàu thủy', 'page': TauThuyPage()}, // 🔸 Gán page để nút ấn được
   ];
