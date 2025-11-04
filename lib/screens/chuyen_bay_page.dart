@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/flight_api_service.dart';
+import '../widgets/base_page_scaffold.dart';
 
 class ChuyenBayPage extends StatefulWidget {
   const ChuyenBayPage({super.key});
@@ -32,33 +33,12 @@ class _ChuyenBayPageState extends State<ChuyenBayPage> {
     }
   }
 
-  void _onItemTapped(int index) {
-    setState(() => _selectedIndex = index);
-    switch (index) {
-      case 0:
-        Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
-        break;
-      case 1:
-        Navigator.pushNamed(context, '/danhmuc');
-        break;
-      case 2:
-        Navigator.pushNamed(context, '/donhang');
-        break;
-      case 3:
-        Navigator.pushNamed(context, '/taikhoan');
-        break;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFFFFAFA),
-      appBar: AppBar(
-        backgroundColor: Colors.orange,
-        title: const Text('Chuyến bay thực tế'),
-        centerTitle: true,
-      ),
+    return BasePageScaffold(
+      title: 'Chuyến bay',
+      currentIndex: _selectedIndex,
+      showHotPlaces: false,
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : RefreshIndicator(
@@ -104,25 +84,6 @@ class _ChuyenBayPageState extends State<ChuyenBayPage> {
                 },
               ),
             ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.orange,
-        unselectedItemColor: Colors.grey,
-        type: BottomNavigationBarType.fixed,
-        onTap: _onItemTapped,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.explore), label: 'Khám phá'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.category),
-            label: 'Danh mục',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.receipt_long),
-            label: 'Đơn hàng',
-          ),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Tài khoản'),
-        ],
-      ),
     );
   }
 }

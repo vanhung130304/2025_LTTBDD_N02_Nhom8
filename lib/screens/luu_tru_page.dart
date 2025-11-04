@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/base_page_scaffold.dart';
 
 class LuuTruPage extends StatefulWidget {
   const LuuTruPage({super.key});
@@ -8,10 +9,9 @@ class LuuTruPage extends StatefulWidget {
 }
 
 class _LuuTruPageState extends State<LuuTruPage> {
-  int _selectedIndex = 0;
+  int _selectedIndex = 1; // danh mục là index 1
 
   void _onItemTapped(int index) {
-    setState(() => _selectedIndex = index);
     switch (index) {
       case 0:
         Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
@@ -113,120 +113,109 @@ class _LuuTruPageState extends State<LuuTruPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFFFFAFA),
-      appBar: AppBar(
-        backgroundColor: Colors.orange,
-        title: const Text(
-          'Lưu trú & Nghỉ dưỡng',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        centerTitle: true,
-      ),
-      body: ListView.builder(
-        padding: const EdgeInsets.all(15),
-        itemCount: hotels.length,
-        itemBuilder: (context, index) {
-          final hotel = hotels[index];
-          return Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15),
+    return BasePageScaffold(
+      title: 'Lưu trú & Nghỉ dưỡng',
+      currentIndex: _selectedIndex,
+      showHotPlaces: false,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 10),
+            child: Text(
+              'Khách sạn được đề xuất',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            margin: const EdgeInsets.symmetric(vertical: 8),
-            elevation: 3,
-            child: Row(
-              children: [
-                ClipRRect(
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(15),
-                    bottomLeft: Radius.circular(15),
-                  ),
-                  child: Image.network(
-                    hotel['image'],
-                    width: 130,
-                    height: 110,
-                    fit: BoxFit.cover,
-                  ),
+          ),
+          ListView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: hotels.length,
+            itemBuilder: (context, index) {
+              final hotel = hotels[index];
+              return Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
                 ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          hotel['name'],
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                        const SizedBox(height: 5),
-                        Text('Địa điểm: ${hotel['location']}'),
-                        const SizedBox(height: 5),
-                        Row(
+                margin: const EdgeInsets.symmetric(vertical: 8),
+                elevation: 3,
+                child: Row(
+                  children: [
+                    ClipRRect(
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(15),
+                        bottomLeft: Radius.circular(15),
+                      ),
+                      child: Image.network(
+                        hotel['image'],
+                        width: 130,
+                        height: 110,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Icon(
-                              Icons.star,
-                              color: Colors.orange.shade400,
-                              size: 16,
+                            Text(
+                              hotel['name'],
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
                             ),
-                            const SizedBox(width: 3),
-                            Text('${hotel['rating']}'),
+                            const SizedBox(height: 5),
+                            Text('Địa điểm: ${hotel['location']}'),
+                            const SizedBox(height: 5),
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.star,
+                                  color: Colors.orange.shade400,
+                                  size: 16,
+                                ),
+                                const SizedBox(width: 3),
+                                Text('${hotel['rating']}'),
+                              ],
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'Giá: ${hotel['price']}',
+                              style: const TextStyle(
+                                color: Colors.redAccent,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Align(
+                              alignment: Alignment.bottomRight,
+                              child: ElevatedButton(
+                                onPressed: () {},
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.orange,
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 10,
+                                    vertical: 4,
+                                  ),
+                                  minimumSize: Size.zero,
+                                ),
+                                child: const Text('Xem chi tiết'),
+                              ),
+                            ),
                           ],
                         ),
-                        const SizedBox(height: 8),
-                        Text(
-                          'Giá: ${hotel['price']}',
-                          style: const TextStyle(
-                            color: Colors.redAccent,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Align(
-                          alignment: Alignment.bottomRight,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              // Navigator.pushNamed(context, '/chitietLuuTru', arguments: hotel);
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.orange,
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 10,
-                                vertical: 4,
-                              ),
-                              minimumSize: Size.zero,
-                            ),
-                            child: const Text('Xem chi tiết'),
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
-            ),
-          );
-        },
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.orange,
-        unselectedItemColor: Colors.grey,
-        type: BottomNavigationBarType.fixed,
-        onTap: _onItemTapped,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.explore), label: 'Khám phá'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.category),
-            label: 'Danh mục',
+              );
+            },
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.receipt_long),
-            label: 'Đơn hàng',
-          ),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Tài khoản'),
         ],
       ),
     );
