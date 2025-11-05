@@ -17,6 +17,9 @@ dependencies:
   # 🌐 Gọi API thật từ Internet
   http: ^1.2.2
 
+  # 🧠 Lưu dữ liệu người dùng (đăng nhập, đăng ký)
+  shared_preferences: ^2.3.2
+
   # 🍎 Icon bộ Cupertino (iOS)
   cupertino_icons: ^1.0.8
 

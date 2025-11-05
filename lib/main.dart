@@ -7,6 +7,7 @@ import 'screens/chuyen_bay_page.dart';
 import 'screens/luu_tru_page.dart';
 import 'screens/tauthuy_page.dart';
 import 'screens/tour_page.dart';
+import 'auth/profile_page.dart';
 
 void main() {
   runApp(TravelApp());
@@ -27,12 +28,30 @@ class TravelApp extends StatelessWidget {
         '/chuyenbay': (context) => ChuyenBayPage(),
         '/tauthuy': (context) => TauThuyPage(),
         '/tour': (context) => const TourPage(),
+        '/taikhoan': (context) => ProfilePage(), // <-- sửa ở đây: bỏ `const`
       },
     );
   }
 }
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  int _selectedIndex = 0;
+
+  void _onItemTapped(int index) {
+    if (index == 3) {
+      Navigator.pushNamed(context, '/taikhoan');
+    } else {
+      setState(() {
+        _selectedIndex = index;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final List<String> bannerImages = [
@@ -80,12 +99,6 @@ class HomeScreen extends StatelessWidget {
         'price': '850.000đ',
         'rating': 4.4,
       },
-      {
-        'name': 'Văn HưngNA (check clone)',
-        'image': 'https://tse3.mm.bing.net/th/id/OIP.exvYmYNk5tYHPkts9PPrZgHaEK?pid=Api&P=0&h=220',
-        'price': '850.000đ',
-        'rating': 4.4,
-      },
     ];
 
     return Scaffold(
@@ -122,27 +135,20 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Khám phá địa điểm mới',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-            ),
+            const Text('Khám phá địa điểm mới',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 TextButton.icon(
                   onPressed: () {},
                   icon: const Icon(Icons.keyboard_arrow_down, size: 20),
-                  label: const Text(
-                    'Mới',
-                    style: TextStyle(color: Colors.black),
-                  ),
+                  label: const Text('Mới', style: TextStyle(color: Colors.black)),
                 ),
                 TextButton(
                   onPressed: () {},
-                  child: const Text(
-                    'Cập nhật vị trí',
-                    style: TextStyle(color: Colors.blue),
-                  ),
+                  child: const Text('Cập nhật vị trí',
+                      style: TextStyle(color: Colors.blue)),
                 ),
               ],
             ),
@@ -158,17 +164,11 @@ class HomeScreen extends StatelessWidget {
                         alignment: Alignment.bottomRight,
                         child: Container(
                           margin: const EdgeInsets.all(12),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 6,
-                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                           color: Colors.orange.withOpacity(0.7),
                           child: const Text(
                             'GIẢM ĐẾN 70%',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                           ),
                         ),
                       ),
@@ -219,10 +219,8 @@ class HomeScreen extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 25),
-            const Text(
-              'Dịch vụ được yêu thích',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-            ),
+            const Text('Dịch vụ được yêu thích',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
             const SizedBox(height: 10),
             ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
@@ -231,9 +229,7 @@ class HomeScreen extends StatelessWidget {
               itemBuilder: (context, index) {
                 final place = hotPlaces[index];
                 return Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
                   margin: const EdgeInsets.symmetric(vertical: 8),
                   elevation: 3,
                   child: Row(
@@ -243,12 +239,7 @@ class HomeScreen extends StatelessWidget {
                           topLeft: Radius.circular(15),
                           bottomLeft: Radius.circular(15),
                         ),
-                        child: Image.network(
-                          place['image'],
-                          width: 130,
-                          height: 110,
-                          fit: BoxFit.cover,
-                        ),
+                        child: Image.network(place['image'], width: 130, height: 110, fit: BoxFit.cover),
                       ),
                       Expanded(
                         child: Padding(
@@ -256,33 +247,21 @@ class HomeScreen extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                place['name'],
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                ),
-                              ),
+                              Text(place['name'],
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold, fontSize: 16)),
                               const SizedBox(height: 5),
                               Row(
                                 children: [
-                                  Icon(
-                                    Icons.star,
-                                    color: Colors.orange,
-                                    size: 16,
-                                  ),
+                                  Icon(Icons.star, color: Colors.orange, size: 16),
                                   const SizedBox(width: 3),
                                   Text('${place['rating']}'),
                                 ],
                               ),
                               const SizedBox(height: 8),
-                              Text(
-                                'Giá: ${place['price']}',
-                                style: const TextStyle(
-                                  color: Colors.redAccent,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
+                              Text('Giá: ${place['price']}',
+                                  style: const TextStyle(
+                                      color: Colors.redAccent, fontWeight: FontWeight.bold)),
                               const SizedBox(height: 8),
                               Align(
                                 alignment: Alignment.bottomRight,
@@ -290,10 +269,7 @@ class HomeScreen extends StatelessWidget {
                                   onPressed: () {},
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.orange,
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 10,
-                                      vertical: 4,
-                                    ),
+                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                                     minimumSize: Size.zero,
                                   ),
                                   child: const Text('Xem chi tiết'),
@@ -312,10 +288,11 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 0,
+        currentIndex: _selectedIndex,
         selectedItemColor: Colors.orange,
         unselectedItemColor: Colors.grey,
         showUnselectedLabels: true,
+        onTap: _onItemTapped,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.explore), label: 'Khám phá'),
           BottomNavigationBarItem(icon: Icon(Icons.place), label: 'Điểm đến'),
@@ -338,13 +315,11 @@ class HomeScreen extends StatelessWidget {
           child: Icon(icon, color: Colors.orange, size: 30),
         ),
         const SizedBox(height: 5),
-        Text(
-          label,
-          style: const TextStyle(fontSize: 12),
-          textAlign: TextAlign.center,
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-        ),
+        Text(label,
+            style: const TextStyle(fontSize: 12),
+            textAlign: TextAlign.center,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis),
       ],
     );
   }
