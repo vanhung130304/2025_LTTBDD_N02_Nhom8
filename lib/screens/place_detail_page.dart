@@ -6,10 +6,18 @@ import '../screens/chuyen_bay_page.dart';
 import '../screens/luu_tru_page.dart';
 import '../screens/tour_page.dart';
 import '../auth/profile_page.dart';
+import 'danh_muc_page.dart';
+
 
 class PlaceDetailPage extends StatefulWidget {
   final Map<String, dynamic> place;
-  const PlaceDetailPage({super.key, required this.place});
+  final List<Map<String, dynamic>> favoritePlaces;
+
+  const PlaceDetailPage({
+    super.key,
+    required this.place,
+    this.favoritePlaces = const [],
+  });
 
   @override
   State<PlaceDetailPage> createState() => _PlaceDetailPageState();
@@ -18,7 +26,6 @@ class PlaceDetailPage extends StatefulWidget {
 class _PlaceDetailPageState extends State<PlaceDetailPage> {
   final TextEditingController _reviewController = TextEditingController();
   int _selectedIndex = 0;
-
   final List<Map<String, dynamic>> _comments = [];
 
   String getInitial(String name) {
@@ -55,16 +62,16 @@ class _PlaceDetailPageState extends State<PlaceDetailPage> {
     });
 
     switch (index) {
-      case 0: // Khám phá
+      case 0:
         Navigator.pushNamed(context, '/home');
         break;
-      case 1: // Điểm đến
+      case 1:
         Navigator.pushNamed(context, '/dichuyen');
         break;
-      case 2: // Danh mục
+      case 2:
         Navigator.pushNamed(context, '/xekhach');
         break;
-      case 3: // Tài khoản
+      case 3:
         Navigator.pushNamed(context, '/taikhoan');
         break;
     }
@@ -73,6 +80,7 @@ class _PlaceDetailPageState extends State<PlaceDetailPage> {
   @override
   Widget build(BuildContext context) {
     final place = widget.place;
+    bool isFavorite = widget.favoritePlaces.contains(place);
 
     return Scaffold(
       appBar: AppBar(
@@ -94,9 +102,30 @@ class _PlaceDetailPageState extends State<PlaceDetailPage> {
               ),
             ),
             const SizedBox(height: 15),
-            Text(
-              place['name'],
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  place['name'],
+                  style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+                IconButton(
+                  icon: Icon(
+                    isFavorite ? Icons.favorite : Icons.favorite_border,
+                    color: Colors.red,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      if (isFavorite) {
+                        widget.favoritePlaces.remove(place);
+                      } else {
+                        widget.favoritePlaces.add(place);
+                        _selectedIndex = 2; // chuyển tab danh mục
+                      }
+                    });
+                  },
+                ),
+              ],
             ),
             const SizedBox(height: 8),
             Row(
@@ -105,8 +134,7 @@ class _PlaceDetailPageState extends State<PlaceDetailPage> {
                 const SizedBox(width: 4),
                 Text('${place['rating']}'),
                 const SizedBox(width: 10),
-                Text('Giá: ${place['price']}',
-                    style: const TextStyle(color: Colors.orange)),
+                Text('Giá: ${place['price']}', style: const TextStyle(color: Colors.orange)),
               ],
             ),
             const SizedBox(height: 15),
@@ -128,7 +156,7 @@ class _PlaceDetailPageState extends State<PlaceDetailPage> {
                   borderRadius: BorderRadius.circular(15),
                 ),
                 suffixIcon: IconButton(
-                  onPressed: () => _addComment('Văn Hưng'), // giả lập user hiện tại
+                  onPressed: () => _addComment('Văn Hưng'),
                   icon: const Icon(Icons.send, color: Colors.orange),
                 ),
               ),
@@ -168,14 +196,11 @@ class _PlaceDetailPageState extends State<PlaceDetailPage> {
                               ),
                               actions: [
                                 TextButton(
-                                    onPressed: () {
-                                      Navigator.of(ctx).pop();
-                                    },
+                                    onPressed: () => Navigator.of(ctx).pop(),
                                     child: const Text('Hủy')),
                                 TextButton(
                                     onPressed: () {
-                                      _addReply(
-                                          idx, 'Văn Hưng', replyController.text);
+                                      _addReply(idx, 'Văn Hưng', replyController.text);
                                       Navigator.of(ctx).pop();
                                     },
                                     child: const Text('Gửi')),
@@ -188,14 +213,11 @@ class _PlaceDetailPageState extends State<PlaceDetailPage> {
                           style: TextStyle(color: Colors.blue, fontSize: 12)),
                     ),
                   ),
-                  // Reply list
-                  if (comment['replies'] != null &&
-                      comment['replies'].isNotEmpty)
+                  if (comment['replies'] != null && comment['replies'].isNotEmpty)
                     Padding(
                       padding: const EdgeInsets.only(left: 40),
                       child: Column(
-                        children: List.generate(
-                            comment['replies'].length, (i) {
+                        children: List.generate(comment['replies'].length, (i) {
                           final reply = comment['replies'][i];
                           return ListTile(
                             leading: CircleAvatar(
@@ -203,15 +225,12 @@ class _PlaceDetailPageState extends State<PlaceDetailPage> {
                               backgroundColor: Colors.grey.shade400,
                               child: Text(
                                 getInitial(reply['author']),
-                                style: const TextStyle(
-                                    color: Colors.white, fontSize: 10),
+                                style: const TextStyle(color: Colors.white, fontSize: 10),
                               ),
                             ),
                             title: Text(reply['author'],
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 12)),
-                            subtitle: Text(reply['content'],
-                                style: const TextStyle(fontSize: 12)),
+                                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                            subtitle: Text(reply['content'], style: const TextStyle(fontSize: 12)),
                           );
                         }),
                       ),

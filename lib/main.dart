@@ -8,7 +8,8 @@ import 'screens/luu_tru_page.dart';
 import 'screens/tauthuy_page.dart';
 import 'screens/tour_page.dart';
 import 'auth/profile_page.dart';
-import 'screens/place_detail_page.dart'; 
+import 'screens/place_detail_page.dart';
+import 'screens/danh_muc_page.dart';
 
 void main() {
   runApp(TravelApp());
@@ -30,6 +31,7 @@ class TravelApp extends StatelessWidget {
         '/tauthuy': (context) => TauThuyPage(),
         '/tour': (context) => const TourPage(),
         '/taikhoan': (context) => ProfilePage(),
+        '/danhmuc': (context) => DanhMucPage(favoritePlaces: []), // mặc định rỗng
       },
     );
   }
@@ -42,19 +44,34 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
+  List<Map<String, dynamic>> favoritePlaces = []; // danh sách yêu thích
 
   void _onItemTapped(int index) {
-    if (index == 3) {
-      Navigator.pushNamed(context, '/taikhoan');
-    } else {
-      setState(() {
-        _selectedIndex = index;
-      });
+    switch (index) {
+      case 0:
+        setState(() => _selectedIndex = 0);
+        break;
+      case 1:
+        setState(() => _selectedIndex = 1);
+        break;
+      case 2:
+        // Chuyển sang trang danh mục với danh sách favorite
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => DanhMucPage(favoritePlaces: favoritePlaces),
+          ),
+        );
+        break;
+      case 3:
+        Navigator.pushNamed(context, '/taikhoan');
+        break;
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    // Banner
     final List<String> bannerImages = [
       'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1000&q=80',
       'https://images.unsplash.com/photo-1518684079-3c830dcef090?auto=format&fit=crop&w=1000&q=80',
@@ -63,54 +80,49 @@ class _HomeScreenState extends State<HomeScreen> {
       'https://tse3.mm.bing.net/th/id/OIP.4yLIzDVOG1EBZBVwjqscbwHaEK?pid=Api&P=0&h=220',
     ];
 
+    // Dữ liệu địa điểm hot
     final List<Map<String, dynamic>> hotPlaces = [
       {
         'name': 'Phú Quốc',
         'image': 'https://tse2.mm.bing.net/th/id/OIP.T_Mtex10QU9Dvr-4HqnmwwHaFj?pid=Api&P=0&h=220',
         'price': '1.200.000đ',
         'rating': 4.8,
-        'description':
-            'Phú Quốc – hòn đảo ngọc tuyệt đẹp của Việt Nam, nổi tiếng với những bãi biển hoang sơ, hải sản tươi ngon và các khu nghỉ dưỡng sang trọng.',
+        'description': 'Phú Quốc – hòn đảo ngọc tuyệt đẹp của Việt Nam...',
       },
       {
         'name': 'Đà Lạt',
         'image': 'https://tse1.mm.bing.net/th/id/OIP.K_GeZEn0BucG7aW0R2H3fgHaE7?pid=Api&P=0&h=220',
         'price': '950.000đ',
         'rating': 4.6,
-        'description':
-            'Đà Lạt – thành phố ngàn hoa, có khí hậu mát mẻ quanh năm, nổi tiếng với cảnh quan thơ mộng và những điểm du lịch hấp dẫn.',
+        'description': 'Đà Lạt – thành phố ngàn hoa, có khí hậu mát mẻ...',
       },
       {
         'name': 'Hạ Long',
         'image': 'https://images.unsplash.com/photo-1551334787-21e6bd3ab135?auto=format&fit=crop&w=800&q=80',
         'price': '1.500.000đ',
         'rating': 4.9,
-        'description':
-            'Vịnh Hạ Long – di sản thiên nhiên thế giới, nổi bật với hàng nghìn hòn đảo đá vôi và cảnh quan ngoạn mục.',
+        'description': 'Vịnh Hạ Long – di sản thiên nhiên thế giới...',
       },
       {
         'name': 'Hội An',
         'image': 'https://tse3.mm.bing.net/th/id/OIP.dzA_Yfyig-awC61M2d4-gAHaEo?pid=Api&P=0&h=220',
         'price': '1.000.000đ',
         'rating': 4.7,
-        'description':
-            'Phố cổ Hội An – nơi lưu giữ vẻ đẹp cổ kính, yên bình, cùng với những con đường đèn lồng rực rỡ và ẩm thực phong phú.',
+        'description': 'Phố cổ Hội An – nơi lưu giữ vẻ đẹp cổ kính...',
       },
       {
         'name': 'Sapa',
         'image': 'https://images.unsplash.com/photo-1549880338-65ddcdfd017b?auto=format&fit=crop&w=800&q=80',
         'price': '1.300.000đ',
         'rating': 4.5,
-        'description':
-            'Sapa – vùng núi phía Bắc Việt Nam, nổi tiếng với ruộng bậc thang hùng vĩ, khí hậu mát lạnh và văn hóa đa dạng.',
+        'description': 'Sapa – vùng núi phía Bắc Việt Nam, nổi tiếng với ruộng bậc thang...',
       },
       {
         'name': 'Ninh Bình',
         'image': 'https://tse3.mm.bing.net/th/id/OIP.exvYmYNk5tYHPkts9PPrZgHaEK?pid=Api&P=0&h=220',
         'price': '850.000đ',
         'rating': 4.4,
-        'description':
-            'Ninh Bình – nơi giao thoa giữa thiên nhiên và văn hóa, nổi bật với Tràng An, Tam Cốc, và chùa Bái Đính.',
+        'description': 'Ninh Bình – nơi giao thoa giữa thiên nhiên và văn hóa...',
       },
     ];
 
@@ -148,8 +160,8 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Khám phá địa điểm mới',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+            // Banner
+            const Text('Khám phá địa điểm mới', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -160,44 +172,35 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 TextButton(
                   onPressed: () {},
-                  child: const Text('Cập nhật vị trí',
-                      style: TextStyle(color: Colors.blue)),
+                  child: const Text('Cập nhật vị trí', style: TextStyle(color: Colors.blue)),
                 ),
               ],
             ),
-            CarouselSlider(
-              items: bannerImages.map((url) {
-                return ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      Image.network(url, fit: BoxFit.cover),
-                      Align(
-                        alignment: Alignment.bottomRight,
-                        child: Container(
-                          margin: const EdgeInsets.all(12),
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                          color: Colors.orange.withOpacity(0.7),
-                          child: const Text(
-                            'GIẢM ĐẾN 70%',
-                            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              }).toList(),
-              options: CarouselOptions(
-                height: 160,
-                autoPlay: true,
-                enlargeCenterPage: true,
-                viewportFraction: 0.9,
-                autoPlayInterval: const Duration(seconds: 4),
-              ),
-            ),
+            // Banner full-width
+CarouselSlider(
+  items: bannerImages.map((url) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: SizedBox(
+        width: double.infinity, // chiếm toàn màn hình
+        child: Image.network(
+          url,
+          fit: BoxFit.cover, // ảnh phủ toàn container
+        ),
+      ),
+    );
+  }).toList(),
+  options: CarouselOptions(
+    height: 200,
+    autoPlay: true,
+    enlargeCenterPage: false, // tắt phóng to
+    viewportFraction: 1.0, // 1 item chiếm toàn màn hình ngang
+    autoPlayInterval: const Duration(seconds: 4),
+  ),
+),
+
             const SizedBox(height: 20),
+            // Grid category
             GridView.count(
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
@@ -206,106 +209,93 @@ class _HomeScreenState extends State<HomeScreen> {
               mainAxisSpacing: 10,
               children: [
                 GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (_) => ThamQuanPage()));
-                  },
+                  onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => ThamQuanPage())),
                   child: buildCategoryIcon(Icons.airplanemode_active, 'Tham quan & giải trí'),
                 ),
                 GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (_) => DiChuyenPage()));
-                  },
+                  onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => DiChuyenPage())),
                   child: buildCategoryIcon(Icons.directions_car, 'Di chuyển'),
                 ),
                 GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (_) => const LuuTruPage()));
-                  },
+                  onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => LuuTruPage())),
                   child: buildCategoryIcon(Icons.hotel, 'Lưu trú & nghỉ dưỡng'),
                 ),
                 GestureDetector(
-                  onTap: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (_) => const TourPage()));
-                  },
+                  onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const TourPage())),
                   child: buildCategoryIcon(Icons.tour, 'Tour'),
                 ),
               ],
             ),
             const SizedBox(height: 25),
-            const Text('Dịch vụ được yêu thích',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+            const Text('Dịch vụ được yêu thích', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
             const SizedBox(height: 10),
             ListView.builder(
-  physics: const NeverScrollableScrollPhysics(),
-  shrinkWrap: true,
-  itemCount: hotPlaces.length,
-  itemBuilder: (context, index) {
-    final place = hotPlaces[index];
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      margin: const EdgeInsets.symmetric(vertical: 8),
-      elevation: 3,
-      child: Row(
-        children: [
-          ClipRRect(
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(15),
-              bottomLeft: Radius.circular(15),
-            ),
-            child: Image.network(place['image'], width: 130, height: 110, fit: BoxFit.cover),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(place['name'],
-                      style: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 16)),
-                  const SizedBox(height: 5),
-                  Row(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: hotPlaces.length,
+              itemBuilder: (context, index) {
+                final place = hotPlaces[index];
+                bool isFavorite = favoritePlaces.any((p) => p['name'] == place['name']);
+
+                return Card(
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                  margin: const EdgeInsets.symmetric(vertical: 8),
+                  elevation: 3,
+                  child: Row(
                     children: [
-                      Icon(Icons.star, color: Colors.orange, size: 16),
-                      const SizedBox(width: 3),
-                      Text('${place['rating']}'),
+                      ClipRRect(
+                        borderRadius: const BorderRadius.only(topLeft: Radius.circular(15), bottomLeft: Radius.circular(15)),
+                        child: Image.network(place['image'], width: 130, height: 110, fit: BoxFit.cover),
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(place['name'], style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                              const SizedBox(height: 5),
+                              Row(
+                                children: [
+                                  Icon(Icons.star, color: Colors.orange, size: 16),
+                                  const SizedBox(width: 3),
+                                  Text('${place['rating']}'),
+                                ],
+                              ),
+                              const SizedBox(height: 8),
+                              Text('Giá: ${place['price']}', style: const TextStyle(color: Colors.redAccent, fontWeight: FontWeight.bold)),
+                              const SizedBox(height: 8),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  IconButton(
+                                    icon: Icon(isFavorite ? Icons.favorite : Icons.favorite_border, color: Colors.red),
+                                    onPressed: () {
+                                      setState(() {
+                                        if (isFavorite) {
+                                          favoritePlaces.removeWhere((p) => p['name'] == place['name']);
+                                        } else {
+                                          favoritePlaces.add(place);
+                                        }
+                                      });
+                                    },
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => PlaceDetailPage(place: place))),
+                                    style: ElevatedButton.styleFrom(backgroundColor: Colors.orange, padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4), minimumSize: Size.zero),
+                                    child: const Text('Xem chi tiết'),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
                     ],
                   ),
-                  const SizedBox(height: 8),
-                  Text('Giá: ${place['price']}',
-                      style: const TextStyle(
-                          color: Colors.redAccent, fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 8),
-                  Align(
-                    alignment: Alignment.bottomRight,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        // ✅ Nút này sẽ mở trang chi tiết riêng của địa điểm
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => PlaceDetailPage(place: place),
-                          ),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.orange,
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                        minimumSize: Size.zero,
-                      ),
-                      child: const Text('Xem chi tiết'),
-                    ),
-                  ),
-                ],
-              ),
+                );
+              },
             ),
-          ),
-        ],
-      ),
-    );
-  },
-),
-
           ],
         ),
       ),
@@ -329,19 +319,12 @@ class _HomeScreenState extends State<HomeScreen> {
     return Column(
       children: [
         Container(
-          decoration: BoxDecoration(
-            color: Colors.orange.shade100,
-            borderRadius: BorderRadius.circular(12),
-          ),
+          decoration: BoxDecoration(color: Colors.orange.shade100, borderRadius: BorderRadius.circular(12)),
           padding: const EdgeInsets.all(12),
           child: Icon(icon, color: Colors.orange, size: 30),
         ),
         const SizedBox(height: 5),
-        Text(label,
-            style: const TextStyle(fontSize: 12),
-            textAlign: TextAlign.center,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis),
+        Text(label, style: const TextStyle(fontSize: 12), textAlign: TextAlign.center, maxLines: 2, overflow: TextOverflow.ellipsis),
       ],
     );
   }
