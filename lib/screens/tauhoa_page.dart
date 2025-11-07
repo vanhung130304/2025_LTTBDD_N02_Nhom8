@@ -1,25 +1,77 @@
 import 'package:flutter/material.dart';
 import '../widgets/base_page_scaffold.dart';
 
-class TauHoaPage extends StatelessWidget {
-  TauHoaPage({super.key});
+class TauHoaPage extends StatefulWidget {
+  const TauHoaPage({super.key});
 
-  final List<Map<String, dynamic>> trainOptions = List.generate(10, (index) {
+  @override
+  State<TauHoaPage> createState() => _TauHoaPageState();
+}
+
+class _TauHoaPageState extends State<TauHoaPage> {
+  int _selectedIndex = 1;
+
+  // Danh sách tất cả chuyến tàu
+  List<Map<String, dynamic>> trainOptions = List.generate(10, (index) {
     return {
       'name': 'Tàu Hỏa ${index + 1}',
       'route': 'Tuyến ${index + 1}',
       'price': '${500 + index * 50}.000đ',
       'rating': 4.0 + (index * 0.1),
-      'image': 'https://tse1.mm.bing.net/th/id/OIP.L368Em5wXC4Kdp_RpvKI4gHaEK?pid=Api&P=0&h=180',
+      'image':
+          'https://tse1.mm.bing.net/th/id/OIP.L368Em5wXC4Kdp_RpvKI4gHaEK?pid=Api&P=0&h=180',
     };
   });
+
+  // Danh sách hiển thị theo tìm kiếm
+  List<Map<String, dynamic>> displayedTrains = [];
+
+  @override
+  void initState() {
+    super.initState();
+    displayedTrains = List.from(trainOptions);
+  }
+
+  // Hàm lọc khi tìm kiếm
+  void filterTrains(String keyword) {
+    setState(() {
+      if (keyword.isEmpty) {
+        displayedTrains = List.from(trainOptions);
+      } else {
+        displayedTrains = trainOptions.where((train) {
+          final nameLower = train['name'].toLowerCase();
+          final routeLower = train['route'].toLowerCase();
+          final searchLower = keyword.toLowerCase();
+          return nameLower.contains(searchLower) || routeLower.contains(searchLower);
+        }).toList();
+      }
+    });
+  }
+
+  void _onItemTapped(int index) {
+    switch (index) {
+      case 0:
+        Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+        break;
+      case 1:
+        Navigator.pushNamed(context, '/danhmuc');
+        break;
+      case 2:
+        Navigator.pushNamed(context, '/donhang');
+        break;
+      case 3:
+        Navigator.pushNamed(context, '/taikhoan');
+        break;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return BasePageScaffold(
       title: 'Tàu Hỏa',
-      currentIndex: 1,
+      currentIndex: _selectedIndex,
       showHotPlaces: false,
+      onSearchChanged: filterTrains, // Gắn callback tìm kiếm
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -33,9 +85,9 @@ class TauHoaPage extends StatelessWidget {
           ListView.builder(
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-            itemCount: trainOptions.length,
+            itemCount: displayedTrains.length,
             itemBuilder: (context, index) {
-              final train = trainOptions[index];
+              final train = displayedTrains[index];
               return Card(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15),

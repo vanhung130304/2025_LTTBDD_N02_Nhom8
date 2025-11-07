@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'screens/thamquan_page.dart';
 import 'screens/dichuyen_page.dart';
 import 'screens/xekhach_page.dart';
@@ -33,7 +32,6 @@ class TravelApp extends StatelessWidget {
         '/tauthuy': (context) => TauThuyPage(),
         '/tour': (context) => const TourPage(),
         '/taikhoan': (context) => ProfilePage(),
-        // ❌ bỏ dòng '/danhmuc': (context) => DanhMucPage(favoritePlaces: []),
       },
     );
   }
@@ -47,8 +45,9 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
   List<Map<String, dynamic>> favoritePlaces = [];
+  final TextEditingController _searchController = TextEditingController();
+  String _searchQuery = '';
 
-  // danh sách địa điểm hot (dùng chung để map lại favorite)
   final List<Map<String, dynamic>> hotPlaces = [
     {
       'name': 'Phú Quốc',
@@ -100,26 +99,22 @@ class _HomeScreenState extends State<HomeScreen> {
     _loadFavorites();
   }
 
-  // ✅ đọc dữ liệu yêu thích đã lưu
   Future<void> _loadFavorites() async {
     final prefs = await SharedPreferences.getInstance();
     final savedNames = prefs.getStringList('favorites') ?? [];
     setState(() {
-      favoritePlaces =
-          hotPlaces.where((p) => savedNames.contains(p['name'])).toList();
+      favoritePlaces = hotPlaces.where((p) => savedNames.contains(p['name'])).toList();
     });
   }
 
-  // ✅ lưu danh sách yêu thích xuống SharedPreferences
   Future<void> _saveFavorites() async {
     final prefs = await SharedPreferences.getInstance();
-prefs.setStringList(
-  'favorites',
-  favoritePlaces.map((p) => p['name'].toString()).toList(),
-);
+    prefs.setStringList(
+      'favorites',
+      favoritePlaces.map((p) => p['name'].toString()).toList(),
+    );
   }
 
-  // ✅ xử lý khi click vào bottom nav
   void _onItemTapped(int index) async {
     switch (index) {
       case 0:
@@ -129,14 +124,13 @@ prefs.setStringList(
         setState(() => _selectedIndex = 1);
         break;
       case 2:
-        // sang trang danh mục
         await Navigator.push(
           context,
           MaterialPageRoute(
             builder: (_) => DanhMucPage(favoritePlaces: favoritePlaces),
           ),
         );
-        _loadFavorites(); // cập nhật lại khi quay về
+        _loadFavorites();
         break;
       case 3:
         Navigator.pushNamed(context, '/taikhoan');
@@ -146,6 +140,12 @@ prefs.setStringList(
 
   @override
   Widget build(BuildContext context) {
+    final filteredPlaces = hotPlaces.where((place) {
+      final name = place['name'].toString().toLowerCase();
+      final desc = place['description'].toString().toLowerCase();
+      return name.contains(_searchQuery) || desc.contains(_searchQuery);
+    }).toList();
+
     final List<String> bannerImages = [
       'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1000&q=80',
       'https://images.unsplash.com/photo-1518684079-3c830dcef090?auto=format&fit=crop&w=1000&q=80',
@@ -171,6 +171,12 @@ prefs.setStringList(
               const SizedBox(width: 10),
               Expanded(
                 child: TextField(
+                  controller: _searchController,
+                  onChanged: (value) {
+                    setState(() {
+                      _searchQuery = value.toLowerCase();
+                    });
+                  },
                   decoration: InputDecoration(
                     hintText: 'Tìm theo điểm đến hoặc hoạt động',
                     border: InputBorder.none,
@@ -223,7 +229,6 @@ prefs.setStringList(
               ),
             ),
             const SizedBox(height: 20),
-            // ⚙️ phần dưới giữ nguyên — chỉ sửa logic yêu thích
             GridView.count(
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
@@ -256,9 +261,9 @@ prefs.setStringList(
             ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
-              itemCount: hotPlaces.length,
+              itemCount: filteredPlaces.length,
               itemBuilder: (context, index) {
-                final place = hotPlaces[index];
+                final place = filteredPlaces[index];
                 bool isFavorite = favoritePlaces.any((p) => p['name'] == place['name']);
 
                 return Card(

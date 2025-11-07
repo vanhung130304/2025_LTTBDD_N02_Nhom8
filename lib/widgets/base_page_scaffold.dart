@@ -7,6 +7,7 @@ class BasePageScaffold extends StatelessWidget {
   final Widget body;
   final bool showHotPlaces;
   final List<Map<String, dynamic>>? hotPlaces;
+  final ValueChanged<String>? onSearchChanged;
 
   const BasePageScaffold({
     super.key,
@@ -15,6 +16,7 @@ class BasePageScaffold extends StatelessWidget {
     required this.body,
     this.showHotPlaces = false,
     this.hotPlaces,
+    this.onSearchChanged,
   });
 
   @override
@@ -47,9 +49,9 @@ class BasePageScaffold extends StatelessWidget {
                     border: InputBorder.none,
                     hintStyle: TextStyle(color: Colors.grey.shade600),
                   ),
+                  onChanged: onSearchChanged,
                 ),
               ),
-              
             ],
           ),
         ),
@@ -59,7 +61,6 @@ class BasePageScaffold extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 🔹 Luôn hiển thị phần "Khám phá địa điểm mới" + "Mới" + "Cập nhật vị trí"
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -89,8 +90,6 @@ class BasePageScaffold extends StatelessWidget {
                 ),
               ],
             ),
-
-            // 🔹 Banner
             CarouselSlider(
               items: bannerImages.map((url) {
                 return ClipRRect(
@@ -130,8 +129,6 @@ class BasePageScaffold extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 15),
-
-            // 🔹 Danh mục
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 0),
               child: GridView.count(
@@ -141,27 +138,15 @@ class BasePageScaffold extends StatelessWidget {
                 crossAxisSpacing: 10,
                 mainAxisSpacing: 10,
                 children: [
-                  buildCategoryIcon(
-                    Icons.airplanemode_active,
-                    'Tham quan & giải trí',
-                    context,
-                  ),
+                  buildCategoryIcon(Icons.airplanemode_active, 'Tham quan & giải trí', context),
                   buildCategoryIcon(Icons.directions_car, 'Di chuyển', context),
-                  buildCategoryIcon(
-                    Icons.hotel,
-                    'Lưu trú & nghỉ dưỡng',
-                    context,
-                  ),
+                  buildCategoryIcon(Icons.hotel, 'Lưu trú & nghỉ dưỡng', context),
                   buildCategoryIcon(Icons.tour, 'Tour', context),
                 ],
               ),
             ),
             const SizedBox(height: 15),
-
-            // 🔹 Nội dung riêng của trang
             body,
-
-            // 🔹 Dịch vụ yêu thích
             if (showHotPlaces && hotPlaces != null)
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -269,11 +254,7 @@ class BasePageScaffold extends StatelessWidget {
         onTap: (index) {
           switch (index) {
             case 0:
-              Navigator.pushNamedAndRemoveUntil(
-                context,
-                '/home',
-                (route) => false,
-              );
+              Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
               break;
             case 1:
               Navigator.pushNamed(context, '/danhmuc');
@@ -289,10 +270,7 @@ class BasePageScaffold extends StatelessWidget {
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.explore), label: 'Khám phá'),
           BottomNavigationBarItem(icon: Icon(Icons.place), label: 'Điểm đến'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.grid_view),
-            label: 'Danh mục',
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.grid_view), label: 'Danh mục'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Tài khoản'),
         ],
       ),

@@ -1,92 +1,108 @@
 import 'package:flutter/material.dart';
 import '../widgets/base_page_scaffold.dart';
 
-class TauThuyPage extends StatelessWidget {
-  TauThuyPage({super.key});
+class TauThuyPage extends StatefulWidget {
+  const TauThuyPage({super.key});
 
-  final List<Map<String, dynamic>> boatOptions = [
+  @override
+  State<TauThuyPage> createState() => _TauThuyPageState();
+}
+
+class _TauThuyPageState extends State<TauThuyPage> {
+  List<Map<String, dynamic>> boatOptions = [
     {
       'name': 'Tàu Thủy A',
       'route': 'Hạ Long - Cát Bà',
       'price': '500.000đ',
       'rating': 4.5,
-      'image':
-          'https://tse4.mm.bing.net/th/id/OIP.OhU8Hw1MR6E2kUxdHozVDwHaFj?pid=Api&P=0&h=180',
+      'image': 'https://tse4.mm.bing.net/th/id/OIP.OhU8Hw1MR6E2kUxdHozVDwHaFj?pid=Api&P=0&h=180',
     },
     {
       'name': 'Tàu Thủy B',
       'route': 'Hạ Long - Tuần Châu',
       'price': '450.000đ',
       'rating': 4.3,
-      'image':
-          'https://tse4.mm.bing.net/th/id/OIP.OhU8Hw1MR6E2kUxdHozVDwHaFj?pid=Api&P=0&h=180',
+      'image': 'https://tse4.mm.bing.net/th/id/OIP.OhU8Hw1MR6E2kUxdHozVDwHaFj?pid=Api&P=0&h=180',
     },
     {
       'name': 'Tàu Thủy C',
       'route': 'Cần Thơ - Phú Quốc',
       'price': '600.000đ',
       'rating': 4.6,
-      'image':
-          'https://tse4.mm.bing.net/th/id/OIP.OhU8Hw1MR6E2kUxdHozVDwHaFj?pid=Api&P=0&h=180',
+      'image': 'https://tse4.mm.bing.net/th/id/OIP.OhU8Hw1MR6E2kUxdHozVDwHaFj?pid=Api&P=0&h=180',
     },
     {
       'name': 'Tàu Thủy D',
       'route': 'Nha Trang - Đảo Hòn Tre',
       'price': '550.000đ',
       'rating': 4.4,
-      'image':
-          'https://tse4.mm.bing.net/th/id/OIP.OhU8Hw1MR6E2kUxdHozVDwHaFj?pid=Api&P=0&h=180',
+      'image': 'https://tse4.mm.bing.net/th/id/OIP.OhU8Hw1MR6E2kUxdHozVDwHaFj?pid=Api&P=0&h=180',
     },
     {
       'name': 'Tàu Thủy E',
       'route': 'Vũng Tàu - Côn Đảo',
       'price': '700.000đ',
       'rating': 4.7,
-      'image':
-          'https://tse4.mm.bing.net/th/id/OIP.OhU8Hw1MR6E2kUxdHozVDwHaFj?pid=Api&P=0&h=180',
+      'image': 'https://tse4.mm.bing.net/th/id/OIP.OhU8Hw1MR6E2kUxdHozVDwHaFj?pid=Api&P=0&h=180',
     },
     {
       'name': 'Tàu Thủy F',
-      'route': 'Vũng Tàu - Côn Đảo',
-      'price': '700.000đ',
-      'rating': 4.7,
-      'image':
-          'https://tse4.mm.bing.net/th/id/OIP.OhU8Hw1MR6E2kUxdHozVDwHaFj?pid=Api&P=0&h=180',
+      'route': 'Đà Nẵng - Hội An',
+      'price': '480.000đ',
+      'rating': 4.2,
+      'image': 'https://tse4.mm.bing.net/th/id/OIP.OhU8Hw1MR6E2kUxdHozVDwHaFj?pid=Api&P=0&h=180',
     },
     {
       'name': 'Tàu Thủy G',
-      'route': 'Vũng Tàu - Côn Đảo',
-      'price': '700.000đ',
-      'rating': 4.7,
-      'image':
-          'https://tse4.mm.bing.net/th/id/OIP.OhU8Hw1MR6E2kUxdHozVDwHaFj?pid=Api&P=0&h=180',
+      'route': 'Huế - Đà Nẵng',
+      'price': '530.000đ',
+      'rating': 4.5,
+      'image': 'https://tse4.mm.bing.net/th/id/OIP.OhU8Hw1MR6E2kUxdHozVDwHaFj?pid=Api&P=0&h=180',
     },
     {
       'name': 'Tàu Thủy H',
-      'route': 'Vũng Tàu - Côn Đảo',
-      'price': '700.000đ',
-      'rating': 4.7,
-      'image':
-          'https://tse4.mm.bing.net/th/id/OIP.OhU8Hw1MR6E2kUxdHozVDwHaFj?pid=Api&P=0&h=180',
+      'route': 'Phú Quốc - An Thới',
+      'price': '620.000đ',
+      'rating': 4.6,
+      'image': 'https://tse4.mm.bing.net/th/id/OIP.OhU8Hw1MR6E2kUxdHozVDwHaFj?pid=Api&P=0&h=180',
     },
     {
       'name': 'Tàu Thủy I',
-      'route': 'Vũng Tàu - Côn Đảo',
-      'price': '700.000đ',
-      'rating': 4.7,
-      'image':
-          'https://tse4.mm.bing.net/th/id/OIP.OhU8Hw1MR6E2kUxdHozVDwHaFj?pid=Api&P=0&h=180',
+      'route': 'Cần Thơ - Sóc Trăng',
+      'price': '540.000đ',
+      'rating': 4.4,
+      'image': 'https://tse4.mm.bing.net/th/id/OIP.OhU8Hw1MR6E2kUxdHozVDwHaFj?pid=Api&P=0&h=180',
     },
     {
       'name': 'Tàu Thủy K',
-      'route': 'Vũng Tàu - Côn Đảo',
-      'price': '700.000đ',
-      'rating': 4.7,
-      'image':
-          'https://tse4.mm.bing.net/th/id/OIP.OhU8Hw1MR6E2kUxdHozVDwHaFj?pid=Api&P=0&h=180'
+      'route': 'Vĩnh Long - Bến Tre',
+      'price': '500.000đ',
+      'rating': 4.3,
+      'image': 'https://tse4.mm.bing.net/th/id/OIP.OhU8Hw1MR6E2kUxdHozVDwHaFj?pid=Api&P=0&h=180',
     },
   ];
 
+  List<Map<String, dynamic>> displayedBoats = [];
+
+  @override
+  void initState() {
+    super.initState();
+    displayedBoats = List.from(boatOptions);
+  }
+
+  void filterBoats(String keyword) {
+    setState(() {
+      if (keyword.isEmpty) {
+        displayedBoats = List.from(boatOptions);
+      } else {
+        displayedBoats = boatOptions
+            .where((boat) =>
+                boat['name'].toLowerCase().contains(keyword.toLowerCase()) ||
+                boat['route'].toLowerCase().contains(keyword.toLowerCase()))
+            .toList();
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -94,6 +110,7 @@ class TauThuyPage extends StatelessWidget {
       title: 'Tàu Thủy',
       currentIndex: 1,
       showHotPlaces: false,
+      onSearchChanged: filterBoats,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -107,9 +124,9 @@ class TauThuyPage extends StatelessWidget {
           ListView.builder(
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-            itemCount: boatOptions.length,
+            itemCount: displayedBoats.length,
             itemBuilder: (context, index) {
-              final boat = boatOptions[index];
+              final boat = displayedBoats[index];
               return Card(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15),

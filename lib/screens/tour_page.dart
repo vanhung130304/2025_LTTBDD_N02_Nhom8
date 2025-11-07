@@ -11,23 +11,6 @@ class TourPage extends StatefulWidget {
 class _TourPageState extends State<TourPage> {
   int _selectedIndex = 1;
 
-  void _onItemTapped(int index) {
-    switch (index) {
-      case 0:
-        Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
-        break;
-      case 1:
-        Navigator.pushNamed(context, '/danhmuc');
-        break;
-      case 2:
-        Navigator.pushNamed(context, '/donhang');
-        break;
-      case 3:
-        Navigator.pushNamed(context, '/taikhoan');
-        break;
-    }
-  }
-
   final List<Map<String, dynamic>> tours = [
     {
       'name': 'Tour Hạ Long 3N2Đ',
@@ -69,7 +52,7 @@ class _TourPageState extends State<TourPage> {
       'price': '2.000.000đ',
       'rating': 4.6,
       'image':
-      'https://tse4.mm.bing.net/th/id/OIP.OnRJQ8Vjuo69cEEjHhy5vAHaEz?pid=Api&P=0&h=180',
+          'https://tse4.mm.bing.net/th/id/OIP.OnRJQ8Vjuo69cEEjHhy5vAHaEz?pid=Api&P=0&h=180',
       'departureDate': '05/12/2025',
       'transport': 'Tàu hỏa',
     },
@@ -80,7 +63,7 @@ class _TourPageState extends State<TourPage> {
       'price': '3.800.000đ',
       'rating': 4.8,
       'image':
-       'https://tse2.mm.bing.net/th/id/OIP.al34spc6Z-EmaPTM6VIkAgHaE8?pid=Api&P=0&h=180',
+          'https://tse2.mm.bing.net/th/id/OIP.al34spc6Z-EmaPTM6VIkAgHaE8?pid=Api&P=0&h=180',
       'departureDate': '18/11/2025',
       'transport': 'Máy bay',
     },
@@ -91,7 +74,7 @@ class _TourPageState extends State<TourPage> {
       'price': '1.200.000đ',
       'rating': 4.5,
       'image':
-       'https://tse2.mm.bing.net/th/id/OIP.1W714dJBW1vcJoTTo1QO2gHaE8?pid=Api&P=0&h=180',
+          'https://tse2.mm.bing.net/th/id/OIP.1W714dJBW1vcJoTTo1QO2gHaE8?pid=Api&P=0&h=180',
       'departureDate': '25/11/2025',
       'transport': 'Xe khách',
     },
@@ -102,7 +85,7 @@ class _TourPageState extends State<TourPage> {
       'price': '2.400.000đ',
       'rating': 4.6,
       'image':
-        'https://tse3.mm.bing.net/th/id/OIP.n9v6fdGqhagLbNLBvKm1DgHaE7?pid=Api&P=0&h=180',
+          'https://tse3.mm.bing.net/th/id/OIP.n9v6fdGqhagLbNLBvKm1DgHaE7?pid=Api&P=0&h=180',
       'departureDate': '12/12/2025',
       'transport': 'Xe khách',
     },
@@ -113,7 +96,7 @@ class _TourPageState extends State<TourPage> {
       'price': '2.300.000đ',
       'rating': 4.5,
       'image':
-      'https://tse2.mm.bing.net/th/id/OIP.DyOpRNM-ZWYFXMKTKyFXNwHaFO?pid=Api&P=0&h=180',
+          'https://tse2.mm.bing.net/th/id/OIP.DyOpRNM-ZWYFXMKTKyFXNwHaFO?pid=Api&P=0&h=180',
       'departureDate': '28/11/2025',
       'transport': 'Xe khách',
     },
@@ -124,7 +107,7 @@ class _TourPageState extends State<TourPage> {
       'price': '3.100.000đ',
       'rating': 4.9,
       'image':
-      'https://tse4.mm.bing.net/th/id/OIP.bW9y77mWwaFEEKjKE2twPQHaFL?pid=Api&P=0&h=180',
+          'https://tse4.mm.bing.net/th/id/OIP.bW9y77mWwaFEEKjKE2twPQHaFL?pid=Api&P=0&h=180',
       'departureDate': '08/12/2025',
       'transport': 'Xe giường nằm',
     },
@@ -135,11 +118,50 @@ class _TourPageState extends State<TourPage> {
       'price': '4.200.000đ',
       'rating': 4.8,
       'image':
-      'https://tse3.mm.bing.net/th/id/OIP.FeBgnKKCkDlj58wkZBOmXgHaED?pid=Api&P=0&h=180',
+          'https://tse3.mm.bing.net/th/id/OIP.FeBgnKKCkDlj58wkZBOmXgHaED?pid=Api&P=0&h=180',
       'departureDate': '30/11/2025',
       'transport': 'Máy bay',
     },
   ];
+
+  List<Map<String, dynamic>> displayedTours = [];
+
+  @override
+  void initState() {
+    super.initState();
+    displayedTours = List.from(tours);
+  }
+
+  void filterTours(String keyword) {
+    setState(() {
+      if (keyword.isEmpty) {
+        displayedTours = List.from(tours);
+      } else {
+        displayedTours = tours
+            .where((tour) =>
+                tour['name'].toLowerCase().contains(keyword.toLowerCase()) ||
+                tour['location'].toLowerCase().contains(keyword.toLowerCase()))
+            .toList();
+      }
+    });
+  }
+
+  void _onItemTapped(int index) {
+    switch (index) {
+      case 0:
+        Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
+        break;
+      case 1:
+        Navigator.pushNamed(context, '/danhmuc');
+        break;
+      case 2:
+        Navigator.pushNamed(context, '/donhang');
+        break;
+      case 3:
+        Navigator.pushNamed(context, '/taikhoan');
+        break;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -147,6 +169,7 @@ class _TourPageState extends State<TourPage> {
       title: 'Tour du lịch',
       currentIndex: _selectedIndex,
       showHotPlaces: false,
+      onSearchChanged: filterTours,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -154,18 +177,15 @@ class _TourPageState extends State<TourPage> {
             padding: EdgeInsets.symmetric(vertical: 10),
             child: Text(
               'Tour du lịch nổi bật',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
           ),
           ListView.builder(
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-            itemCount: tours.length,
+            itemCount: displayedTours.length,
             itemBuilder: (context, index) {
-              final tour = tours[index];
+              final tour = displayedTours[index];
               return Card(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15),
@@ -195,9 +215,7 @@ class _TourPageState extends State<TourPage> {
                             Text(
                               tour['name'],
                               style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                              ),
+                                  fontWeight: FontWeight.bold, fontSize: 16),
                             ),
                             const SizedBox(height: 5),
                             Text('Địa điểm: ${tour['location']}'),
@@ -217,9 +235,8 @@ class _TourPageState extends State<TourPage> {
                             Text(
                               'Giá: ${tour['price']}',
                               style: const TextStyle(
-                                color: Colors.redAccent,
-                                fontWeight: FontWeight.bold,
-                              ),
+                                  color: Colors.redAccent,
+                                  fontWeight: FontWeight.bold),
                             ),
                             const SizedBox(height: 8),
                             Align(
@@ -229,9 +246,7 @@ class _TourPageState extends State<TourPage> {
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.orange,
                                   padding: const EdgeInsets.symmetric(
-                                    horizontal: 10,
-                                    vertical: 4,
-                                  ),
+                                      horizontal: 10, vertical: 4),
                                   minimumSize: Size.zero,
                                 ),
                                 child: const Text('Xem chi tiết'),
