@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'screens/thamquan_page.dart';
 import 'screens/dichuyen_page.dart';
 import 'screens/xekhach_page.dart';
@@ -31,7 +33,7 @@ class TravelApp extends StatelessWidget {
         '/tauthuy': (context) => TauThuyPage(),
         '/tour': (context) => const TourPage(),
         '/taikhoan': (context) => ProfilePage(),
-        '/danhmuc': (context) => DanhMucPage(favoritePlaces: []), // mặc định rỗng
+        // ❌ bỏ dòng '/danhmuc': (context) => DanhMucPage(favoritePlaces: []),
       },
     );
   }
@@ -44,9 +46,81 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
-  List<Map<String, dynamic>> favoritePlaces = []; // danh sách yêu thích
+  List<Map<String, dynamic>> favoritePlaces = [];
 
-  void _onItemTapped(int index) {
+  // danh sách địa điểm hot (dùng chung để map lại favorite)
+  final List<Map<String, dynamic>> hotPlaces = [
+    {
+      'name': 'Phú Quốc',
+      'image': 'https://tse2.mm.bing.net/th/id/OIP.T_Mtex10QU9Dvr-4HqnmwwHaFj?pid=Api&P=0&h=220',
+      'price': '1.200.000đ',
+      'rating': 4.8,
+      'description': 'Phú Quốc – hòn đảo ngọc tuyệt đẹp của Việt Nam...',
+    },
+    {
+      'name': 'Đà Lạt',
+      'image': 'https://tse1.mm.bing.net/th/id/OIP.K_GeZEn0BucG7aW0R2H3fgHaE7?pid=Api&P=0&h=220',
+      'price': '950.000đ',
+      'rating': 4.6,
+      'description': 'Đà Lạt – thành phố ngàn hoa, có khí hậu mát mẻ...',
+    },
+    {
+      'name': 'Hạ Long',
+      'image': 'https://images.unsplash.com/photo-1551334787-21e6bd3ab135?auto=format&fit=crop&w=800&q=80',
+      'price': '1.500.000đ',
+      'rating': 4.9,
+      'description': 'Vịnh Hạ Long – di sản thiên nhiên thế giới...',
+    },
+    {
+      'name': 'Hội An',
+      'image': 'https://tse3.mm.bing.net/th/id/OIP.dzA_Yfyig-awC61M2d4-gAHaEo?pid=Api&P=0&h=220',
+      'price': '1.000.000đ',
+      'rating': 4.7,
+      'description': 'Phố cổ Hội An – nơi lưu giữ vẻ đẹp cổ kính...',
+    },
+    {
+      'name': 'Sapa',
+      'image': 'https://images.unsplash.com/photo-1549880338-65ddcdfd017b?auto=format&fit=crop&w=800&q=80',
+      'price': '1.300.000đ',
+      'rating': 4.5,
+      'description': 'Sapa – vùng núi phía Bắc Việt Nam, nổi tiếng với ruộng bậc thang...',
+    },
+    {
+      'name': 'Ninh Bình',
+      'image': 'https://tse3.mm.bing.net/th/id/OIP.exvYmYNk5tYHPkts9PPrZgHaEK?pid=Api&P=0&h=220',
+      'price': '850.000đ',
+      'rating': 4.4,
+      'description': 'Ninh Bình – nơi giao thoa giữa thiên nhiên và văn hóa...',
+    },
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadFavorites();
+  }
+
+  // ✅ đọc dữ liệu yêu thích đã lưu
+  Future<void> _loadFavorites() async {
+    final prefs = await SharedPreferences.getInstance();
+    final savedNames = prefs.getStringList('favorites') ?? [];
+    setState(() {
+      favoritePlaces =
+          hotPlaces.where((p) => savedNames.contains(p['name'])).toList();
+    });
+  }
+
+  // ✅ lưu danh sách yêu thích xuống SharedPreferences
+  Future<void> _saveFavorites() async {
+    final prefs = await SharedPreferences.getInstance();
+prefs.setStringList(
+  'favorites',
+  favoritePlaces.map((p) => p['name'].toString()).toList(),
+);
+  }
+
+  // ✅ xử lý khi click vào bottom nav
+  void _onItemTapped(int index) async {
     switch (index) {
       case 0:
         setState(() => _selectedIndex = 0);
@@ -55,13 +129,14 @@ class _HomeScreenState extends State<HomeScreen> {
         setState(() => _selectedIndex = 1);
         break;
       case 2:
-        // Chuyển sang trang danh mục với danh sách favorite
-        Navigator.push(
+        // sang trang danh mục
+        await Navigator.push(
           context,
           MaterialPageRoute(
             builder: (_) => DanhMucPage(favoritePlaces: favoritePlaces),
           ),
         );
+        _loadFavorites(); // cập nhật lại khi quay về
         break;
       case 3:
         Navigator.pushNamed(context, '/taikhoan');
@@ -71,59 +146,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Banner
     final List<String> bannerImages = [
       'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1000&q=80',
       'https://images.unsplash.com/photo-1518684079-3c830dcef090?auto=format&fit=crop&w=1000&q=80',
       'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1000&q=80',
       'https://tse1.mm.bing.net/th/id/OIP.kNZyRFXEOhmeCE-aHRHXEgHaEl?pid=Api&P=0&h=220',
       'https://tse3.mm.bing.net/th/id/OIP.4yLIzDVOG1EBZBVwjqscbwHaEK?pid=Api&P=0&h=220',
-    ];
-
-    // Dữ liệu địa điểm hot
-    final List<Map<String, dynamic>> hotPlaces = [
-      {
-        'name': 'Phú Quốc',
-        'image': 'https://tse2.mm.bing.net/th/id/OIP.T_Mtex10QU9Dvr-4HqnmwwHaFj?pid=Api&P=0&h=220',
-        'price': '1.200.000đ',
-        'rating': 4.8,
-        'description': 'Phú Quốc – hòn đảo ngọc tuyệt đẹp của Việt Nam...',
-      },
-      {
-        'name': 'Đà Lạt',
-        'image': 'https://tse1.mm.bing.net/th/id/OIP.K_GeZEn0BucG7aW0R2H3fgHaE7?pid=Api&P=0&h=220',
-        'price': '950.000đ',
-        'rating': 4.6,
-        'description': 'Đà Lạt – thành phố ngàn hoa, có khí hậu mát mẻ...',
-      },
-      {
-        'name': 'Hạ Long',
-        'image': 'https://images.unsplash.com/photo-1551334787-21e6bd3ab135?auto=format&fit=crop&w=800&q=80',
-        'price': '1.500.000đ',
-        'rating': 4.9,
-        'description': 'Vịnh Hạ Long – di sản thiên nhiên thế giới...',
-      },
-      {
-        'name': 'Hội An',
-        'image': 'https://tse3.mm.bing.net/th/id/OIP.dzA_Yfyig-awC61M2d4-gAHaEo?pid=Api&P=0&h=220',
-        'price': '1.000.000đ',
-        'rating': 4.7,
-        'description': 'Phố cổ Hội An – nơi lưu giữ vẻ đẹp cổ kính...',
-      },
-      {
-        'name': 'Sapa',
-        'image': 'https://images.unsplash.com/photo-1549880338-65ddcdfd017b?auto=format&fit=crop&w=800&q=80',
-        'price': '1.300.000đ',
-        'rating': 4.5,
-        'description': 'Sapa – vùng núi phía Bắc Việt Nam, nổi tiếng với ruộng bậc thang...',
-      },
-      {
-        'name': 'Ninh Bình',
-        'image': 'https://tse3.mm.bing.net/th/id/OIP.exvYmYNk5tYHPkts9PPrZgHaEK?pid=Api&P=0&h=220',
-        'price': '850.000đ',
-        'rating': 4.4,
-        'description': 'Ninh Bình – nơi giao thoa giữa thiên nhiên và văn hóa...',
-      },
     ];
 
     return Scaffold(
@@ -160,8 +188,8 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Banner
-            const Text('Khám phá địa điểm mới', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+            const Text('Khám phá địa điểm mới',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -176,31 +204,26 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ],
             ),
-            // Banner full-width
-CarouselSlider(
-  items: bannerImages.map((url) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(20),
-      child: SizedBox(
-        width: double.infinity, // chiếm toàn màn hình
-        child: Image.network(
-          url,
-          fit: BoxFit.cover, // ảnh phủ toàn container
-        ),
-      ),
-    );
-  }).toList(),
-  options: CarouselOptions(
-    height: 200,
-    autoPlay: true,
-    enlargeCenterPage: false, // tắt phóng to
-    viewportFraction: 1.0, // 1 item chiếm toàn màn hình ngang
-    autoPlayInterval: const Duration(seconds: 4),
-  ),
-),
-
+            CarouselSlider(
+              items: bannerImages.map((url) {
+                return ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: Image.network(url, fit: BoxFit.cover),
+                  ),
+                );
+              }).toList(),
+              options: CarouselOptions(
+                height: 200,
+                autoPlay: true,
+                enlargeCenterPage: false,
+                viewportFraction: 1.0,
+                autoPlayInterval: const Duration(seconds: 4),
+              ),
+            ),
             const SizedBox(height: 20),
-            // Grid category
+            // ⚙️ phần dưới giữ nguyên — chỉ sửa logic yêu thích
             GridView.count(
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
@@ -227,7 +250,8 @@ CarouselSlider(
               ],
             ),
             const SizedBox(height: 25),
-            const Text('Dịch vụ được yêu thích', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+            const Text('Dịch vụ được yêu thích',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
             const SizedBox(height: 10),
             ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
@@ -244,8 +268,10 @@ CarouselSlider(
                   child: Row(
                     children: [
                       ClipRRect(
-                        borderRadius: const BorderRadius.only(topLeft: Radius.circular(15), bottomLeft: Radius.circular(15)),
-                        child: Image.network(place['image'], width: 130, height: 110, fit: BoxFit.cover),
+                        borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(15), bottomLeft: Radius.circular(15)),
+                        child: Image.network(place['image'],
+                            width: 130, height: 110, fit: BoxFit.cover),
                       ),
                       Expanded(
                         child: Padding(
@@ -253,24 +279,30 @@ CarouselSlider(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(place['name'], style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                              Text(place['name'],
+                                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                               const SizedBox(height: 5),
                               Row(
                                 children: [
-                                  Icon(Icons.star, color: Colors.orange, size: 16),
+                                  const Icon(Icons.star, color: Colors.orange, size: 16),
                                   const SizedBox(width: 3),
                                   Text('${place['rating']}'),
                                 ],
                               ),
                               const SizedBox(height: 8),
-                              Text('Giá: ${place['price']}', style: const TextStyle(color: Colors.redAccent, fontWeight: FontWeight.bold)),
+                              Text('Giá: ${place['price']}',
+                                  style: const TextStyle(
+                                      color: Colors.redAccent, fontWeight: FontWeight.bold)),
                               const SizedBox(height: 8),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   IconButton(
-                                    icon: Icon(isFavorite ? Icons.favorite : Icons.favorite_border, color: Colors.red),
-                                    onPressed: () {
+                                    icon: Icon(
+                                      isFavorite ? Icons.favorite : Icons.favorite_border,
+                                      color: Colors.red,
+                                    ),
+                                    onPressed: () async {
                                       setState(() {
                                         if (isFavorite) {
                                           favoritePlaces.removeWhere((p) => p['name'] == place['name']);
@@ -278,11 +310,19 @@ CarouselSlider(
                                           favoritePlaces.add(place);
                                         }
                                       });
+                                      await _saveFavorites();
                                     },
                                   ),
                                   ElevatedButton(
-                                    onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => PlaceDetailPage(place: place))),
-                                    style: ElevatedButton.styleFrom(backgroundColor: Colors.orange, padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4), minimumSize: Size.zero),
+                                    onPressed: () => Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (_) => PlaceDetailPage(place: place)),
+                                    ),
+                                    style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.orange,
+                                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                        minimumSize: Size.zero),
                                     child: const Text('Xem chi tiết'),
                                   ),
                                 ],
@@ -319,12 +359,17 @@ CarouselSlider(
     return Column(
       children: [
         Container(
-          decoration: BoxDecoration(color: Colors.orange.shade100, borderRadius: BorderRadius.circular(12)),
+          decoration: BoxDecoration(
+              color: Colors.orange.shade100, borderRadius: BorderRadius.circular(12)),
           padding: const EdgeInsets.all(12),
           child: Icon(icon, color: Colors.orange, size: 30),
         ),
         const SizedBox(height: 5),
-        Text(label, style: const TextStyle(fontSize: 12), textAlign: TextAlign.center, maxLines: 2, overflow: TextOverflow.ellipsis),
+        Text(label,
+            style: const TextStyle(fontSize: 12),
+            textAlign: TextAlign.center,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis),
       ],
     );
   }

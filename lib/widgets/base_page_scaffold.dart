@@ -49,7 +49,7 @@ class BasePageScaffold extends StatelessWidget {
                   ),
                 ),
               ),
-              const Icon(Icons.shopping_cart, color: Colors.orange),
+              
             ],
           ),
         ),
