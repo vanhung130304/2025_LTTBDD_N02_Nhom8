@@ -88,7 +88,7 @@ class _ProfilePageState extends State<ProfilePage> {
             // 1. Profile Nhóm 8: ĐÃ THÊM LOGIC ĐIỀU HƯỚNG
             _buildMenuItem(
               Icons.history, 
-              "Profile Nhóm 8 ", 
+              "Profile Nhóm 11 ", 
               () => _navigateTo(const GroupProfilePage()), 
             ),
             

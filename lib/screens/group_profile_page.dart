@@ -11,7 +11,7 @@ class GroupProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profile Nhóm 8'),
+        title: const Text('Profile Nhóm 11'),
         backgroundColor: Colors.orange,
         foregroundColor: Colors.white,
         elevation: 1, 
@@ -92,7 +92,7 @@ class GroupProfileBody extends StatelessWidget {
           // Tên Nhóm và Mô tả
           const Center(
             child: Text(
-              'Nhóm Phát triển Ứng dụng Di động (Nhóm 8)',
+              'Nhóm Phát triển Ứng dụng Di động (Nhóm 11)',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
