@@ -71,7 +71,7 @@ class _ProfilePageState extends State<ProfilePage> {
               style: const TextStyle(color: Colors.grey),
             ),
             const SizedBox(height: 25),
-            _buildMenuItem(Icons.history, "Lịch sử đặt dịch vụ"),
+            _buildMenuItem(Icons.history, "Profile Nhóm 8 "),
             _buildMenuItem(Icons.settings, "Cài đặt tài khoản"),
             _buildMenuItem(Icons.support_agent, "Trung tâm hỗ trợ"),
             _buildMenuItem(Icons.privacy_tip, "Chính sách & quyền riêng tư"),
